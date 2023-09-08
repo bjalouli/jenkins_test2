@@ -34,9 +34,6 @@ pipeline {
                 }
             }
         }
-    }
-
-    post {
         failure {
             script {
                 // Configure GitHub issue notification
