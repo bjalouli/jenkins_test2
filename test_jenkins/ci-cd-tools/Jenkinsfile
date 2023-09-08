@@ -76,6 +76,7 @@ pipeline {
                     ])
                     // Store the new issue number in an environment variable
                     env.ISSUE_NUMBER = getIssueNumber("$JOB_NAME $BUILD_DISPLAY_NAME failed")
+                    echo "env.ISSUE_NUMBER"
                 }
             }
         }
