@@ -83,7 +83,11 @@ pipeline {
         success {
             script {
                 // Close the GitHub issue if it was previously opened
-                closeGitHubIssue(env.ISSUE_NUMBER)
+                if(env.ISSUE_NUMBER !=0)
+                {
+                    closeGitHubIssue(env.ISSUE_NUMBER)
+                }
+                
             }
         }
     }
