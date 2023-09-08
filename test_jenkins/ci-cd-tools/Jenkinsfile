@@ -6,9 +6,9 @@ pipeline {
     }
 
     stages {
-        stage('git repo & clean'){
+        stage('git repo & clean') {
             steps {
-                sh " rm -rf jenkins_test2"
+                sh "rm -rf jenkins_test2"
                 sh "git clone https://github.com/bjalouli/jenkins_test2.git"
                 //sh "mvn clean -f jenkins_test2"
             }
@@ -16,6 +16,36 @@ pipeline {
         stage('Build') {
             steps {
                 sh "${TOOL_DIR}/build.sh ${WORKSPACE}/jenkins_test2/test_jenkins/Debug Debug all"
+            }
+        }
+    }
+
+    post {
+        always {
+            catchError { // Catch any errors that occur during the pipeline
+                // Your post-build actions here
+
+                // Configure GitHub project URL
+                script {
+                    properties([
+                        [$class: 'GithubProjectProperty',
+                        projectUrlStr: 'https://github.com/bjalouli/jenkins_test2']
+                    ])
+                }
+            }
+        }
+    }
+
+    post {
+        failure {
+            script {
+                // Configure GitHub issue notification
+                step([
+                    $class: 'GitHubIssueNotifier',
+                    issueAppend: true,
+                    issueLabel: '',
+                    issueTitle: '$JOB_NAME $BUILD_DISPLAY_NAME failed'
+                ])
             }
         }
     }
