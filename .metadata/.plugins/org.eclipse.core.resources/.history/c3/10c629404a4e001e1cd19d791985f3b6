@@ -1,0 +1,31 @@
+pipeline {
+    agent any
+
+    environment {
+        TOOL_DIR = "${WORKSPACE}/ci-cd-tools"
+    }
+
+    stages {
+        stage('Build') {
+            steps {
+                sh "${TOOL_DIR}/build.sh ${WORKSPACE}/Debug Debug all"
+            }
+        }
+
+
+        post {
+            success {
+                sh "${TOOL_DIR}/deliver.sh ${WORKSPACE} ${BUILD_TAG} ${GIT_COMMIT}"
+            }
+            unsuccessful {
+                script {
+                    emailext (
+                        to: '${DEFAULT_RECIPIENTS}',
+                        subject: "Unsuccessful build ${env.BUILD_ID}",
+                        body: "Build ${env.BUILD_ID} has result ${currentBuild.currentResult}"
+                    )
+                }
+            }
+        }
+    }
+}
