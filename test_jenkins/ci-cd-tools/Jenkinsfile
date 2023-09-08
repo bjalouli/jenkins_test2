@@ -2,29 +2,20 @@ pipeline {
     agent any
 
     environment {
-        TOOL_DIR = "${WORKSPACE}/ci-cd-tools"
+        TOOL_DIR = "${WORKSPACE}/jenkins_test2/test_jenkins/ci-cd-tools"
     }
 
     stages {
-        stage('Build') {
+        stage('git repo & clean'){
             steps {
-                sh "${TOOL_DIR}/build.sh ${WORKSPACE}/Debug Debug all"
+                sh " rm -rf jenkins_test2"
+                sh "git clone https://github.com/bjalouli/jenkins_test2.git"
+                //sh "mvn clean -f jenkins_test2"
             }
         }
-
-
-        post {
-            success {
-                sh "${TOOL_DIR}/deliver.sh ${WORKSPACE} ${BUILD_TAG} ${GIT_COMMIT}"
-            }
-            unsuccessful {
-                script {
-                    emailext (
-                        to: '${DEFAULT_RECIPIENTS}',
-                        subject: "Unsuccessful build ${env.BUILD_ID}",
-                        body: "Build ${env.BUILD_ID} has result ${currentBuild.currentResult}"
-                    )
-                }
+        stage('Build') {
+            steps {
+                sh "${TOOL_DIR}/build.sh ${WORKSPACE}/jenkins_test2/test_jenkins/Debug Debug all"
             }
         }
     }
