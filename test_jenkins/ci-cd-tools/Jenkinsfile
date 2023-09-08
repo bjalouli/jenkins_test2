@@ -1,9 +1,9 @@
     def getIssueNumber(issueTitle) {
-         response = httpRequest(
+       def  response = httpRequest(
             url: "https://api.github.com/repos/${env.GITHUB_REPO}/issues?state=open",
             authentication: 'github'
         )
-         issues = readJSON text: response.content
+       def  issues = readJSON text: response.content
         for (issue in issues) {
             if (issue.title == issueTitle) {
                 return issue.number
