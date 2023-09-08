@@ -80,16 +80,6 @@ pipeline {
                 }
             }
         }
-        success {
-            script {
-                // Close the GitHub issue if it was previously opened
-                if(env.ISSUE_NUMBER !=0)
-                {
-                    closeGitHubIssue(env.ISSUE_NUMBER)
-                }
-                
-            }
-        }
     }
 
 
