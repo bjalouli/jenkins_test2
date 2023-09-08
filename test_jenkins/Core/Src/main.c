@@ -95,6 +95,7 @@ int main(void)
   {
     /* USER CODE END WHILE */
 
+
     /* USER CODE BEGIN 3 */
 	  HAL_GPIO_TogglePin(GPIOD, GPIO_PIN_12);
 	  HAL_GPIO_TogglePin(GPIOD, GPIO_PIN_12);
