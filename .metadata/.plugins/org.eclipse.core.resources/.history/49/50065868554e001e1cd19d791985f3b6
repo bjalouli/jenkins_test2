@@ -1,0 +1,86 @@
+def getIssueNumber() {
+        def response = httpRequest(
+            url: "https://api.github.com/repos/${env.GITHUB_REPO}/issues?state=open",
+            authentication: 'github'
+        )
+        def issues = readJSON text: response.content
+        for (issue in issues) {
+            if (issue.title == "$JOB_NAME $BUILD_DISPLAY_NAME failed") {
+                return issue.number
+            }
+        }
+        return 0 // Return 0 if the issue was not found
+    }
+
+    def closeGitHubIssue(issueNumber) {
+        if (issueNumber != 0) {
+            httpRequest(
+                url: "https://api.github.com/repos/${env.GITHUB_REPO}/issues/${issueNumber}",
+                authentication: 'github',
+                httpMode: 'PATCH',
+                contentType: 'APPLICATION_JSON',
+                requestBody: '{"state": "closed"}'
+            )
+        }
+    }
+pipeline {
+    agent any
+
+    environment {
+        TOOL_DIR = "${WORKSPACE}/jenkins_test2/test_jenkins/ci-cd-tools"
+        GITHUB_REPO = 'owner/repo' // Replace with your GitHub repository (e.g., 'username/my-repo')
+        ISSUE_NUMBER = 0 // Initialize with a placeholder value
+    }
+
+    stages {
+        stage('git repo & clean') {
+            steps {
+                sh "rm -rf jenkins_test2"
+                sh "git clone https://github.com/bjalouli/jenkins_test2.git"
+                //sh "mvn clean -f jenkins_test2"
+            }
+        }
+        stage('Build') {
+            steps {
+                sh "${TOOL_DIR}/build.sh ${WORKSPACE}/jenkins_test2/test_jenkins/Debug Debug all"
+            }
+        }
+    }
+
+    post {
+        always {
+            catchError { // Catch any errors that occur during the pipeline
+                // Your post-build actions here
+
+                // Configure GitHub project URL
+                script {
+                    properties([
+                        [$class: 'GithubProjectProperty',
+                        projectUrlStr: 'https://github.com/bjalouli/jenkins_test2']
+                    ])
+                }
+            }
+        }
+        failure {
+            script {
+                // Configure GitHub issue notification
+                step([
+                    $class: 'GitHubIssueNotifier',
+                    issueAppend: true,
+                    issueLabel: '',
+                    issueTitle: '$JOB_NAME $BUILD_DISPLAY_NAME failed'
+                ])
+                // Store the issue number in an environment variable
+                env.ISSUE_NUMBER = getIssueNumber()
+            }
+        }
+        success {
+            script {
+                // Close the GitHub issue if it was previously opened
+                closeGitHubIssue(env.ISSUE_NUMBER)
+            }
+        }
+    }
+
+    
+}
