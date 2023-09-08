@@ -13,7 +13,7 @@ else
   target="$2"
 fi
 
-ws_root="/home/bilel_j/STM32CubeIDE/workspace_1.12.1/test_jenkins/Debug"
+ws_root="/home/bilel_j/STM32CubeIDE/workspace_1.12.1/test_jenkins"
 build_dir="$ws_root/$build_type"
 
 "$ws_root/ci-cd-tools/build.sh" "$build_dir" "$build_type" "$target"

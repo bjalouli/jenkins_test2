@@ -60,8 +60,8 @@ all: main-build
 main-build: test_jenkins.elf secondary-outputs
 
 # Tool invocations
-test_jenkins.elf test_jenkins.map: $(OBJS) $(USER_OBJS) /home/bilel_j/STM32CubeIDE/workspace_1.12.1/test_jenkins/STM32F401VCTX_FLASH.ld makefile objects.list $(OPTIONAL_TOOL_DEPS)
-	arm-none-eabi-gcc -o "test_jenkins.elf" @"objects.list" $(USER_OBJS) $(LIBS) -mcpu=cortex-m4 -T"/home/bilel_j/STM32CubeIDE/workspace_1.12.1/test_jenkins/STM32F401VCTX_FLASH.ld" --specs=nosys.specs -Wl,-Map="test_jenkins.map" -Wl,--gc-sections -static --specs=nano.specs -mfpu=fpv4-sp-d16 -mfloat-abi=hard -mthumb -Wl,--start-group -lc -lm -Wl,--end-group
+test_jenkins.elf test_jenkins.map: $(OBJS) $(USER_OBJS) ../STM32F401VCTX_FLASH.ld makefile objects.list $(OPTIONAL_TOOL_DEPS)
+	arm-none-eabi-gcc -o "test_jenkins.elf" @"objects.list" $(USER_OBJS) $(LIBS) -mcpu=cortex-m4 -T"../STM32F401VCTX_FLASH.ld" --specs=nosys.specs -Wl,-Map="test_jenkins.map" -Wl,--gc-sections -static --specs=nano.specs -mfpu=fpv4-sp-d16 -mfloat-abi=hard -mthumb -Wl,--start-group -lc -lm -Wl,--end-group
 	@echo 'Finished building target: $@'
 	@echo ' '
 
