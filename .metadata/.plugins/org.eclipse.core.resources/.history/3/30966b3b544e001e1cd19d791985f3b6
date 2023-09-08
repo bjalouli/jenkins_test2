@@ -1,28 +1,3 @@
-def getIssueNumber() {
-        def response = httpRequest(
-            url: "https://api.github.com/repos/${env.GITHUB_REPO}/issues?state=open",
-            authentication: 'github'
-        )
-        def issues = readJSON text: response.content
-        for (issue in issues) {
-            if (issue.title == "$JOB_NAME $BUILD_DISPLAY_NAME failed") {
-                return issue.number
-            }
-        }
-        return 0 // Return 0 if the issue was not found
-    }
-
-    def closeGitHubIssue(issueNumber) {
-        if (issueNumber != 0) {
-            httpRequest(
-                url: "https://api.github.com/repos/${env.GITHUB_REPO}/issues/${issueNumber}",
-                authentication: 'github',
-                httpMode: 'PATCH',
-                contentType: 'APPLICATION_JSON',
-                requestBody: '{"state": "closed"}'
-            )
-        }
-    }
 pipeline {
     agent any
 
@@ -82,5 +57,29 @@ pipeline {
         }
     }
 
-    
+    def getIssueNumber() {
+        def response = httpRequest(
+            url: "https://api.github.com/repos/${env.GITHUB_REPO}/issues?state=open",
+            authentication: 'github'
+        )
+        def issues = readJSON text: response.content
+        for (issue in issues) {
+            if (issue.title == "$JOB_NAME $BUILD_DISPLAY_NAME failed") {
+                return issue.number
+            }
+        }
+        return 0 // Return 0 if the issue was not found
+    }
+
+    def closeGitHubIssue(issueNumber) {
+        if (issueNumber != 0) {
+            httpRequest(
+                url: "https://api.github.com/repos/${env.GITHUB_REPO}/issues/${issueNumber}",
+                authentication: 'github',
+                httpMode: 'PATCH',
+                contentType: 'APPLICATION_JSON',
+                requestBody: '{"state": "closed"}'
+            )
+        }
+    }
 }
