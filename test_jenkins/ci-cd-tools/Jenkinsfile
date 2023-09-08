@@ -64,8 +64,6 @@ pipeline {
         }
         failure {
             script {
-                // Check if the issue already exists
-                env.ISSUE_NUMBER = getIssueNumber("$JOB_NAME $BUILD_DISPLAY_NAME failed")
                     // Create a new GitHub issue
                     step([
                         $class: 'GitHubIssueNotifier',
