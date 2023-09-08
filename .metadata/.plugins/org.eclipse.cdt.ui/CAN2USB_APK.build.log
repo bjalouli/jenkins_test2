@@ -1,0 +1,10 @@
+11:01:43 **** Incremental Build of configuration Debug for project CAN2USB_APK ****
+make -j9 all 
+arm-none-eabi-size   CAN2USB_APK.elf 
+   text	   data	    bss	    dec	    hex	filename
+  45176	    856	  11976	  58008	   e298	CAN2USB_APK.elf
+Finished building: default.size.stdout
+ 
+
+11:01:44 Build Finished. 0 errors, 0 warnings. (took 276ms)
+

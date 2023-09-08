@@ -1,0 +1,3 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<session version="1.0">&#x0A;<refactoring comment="Rename resource &apos;ci-cd-class-1/ci-cd-tools/Jenkinsfile&apos; to &apos;Jenkinsfile.sh&apos;" description="Rename resource &apos;Jenkinsfile&apos;" flags="7" id="org.eclipse.ltk.core.refactoring.rename.resource" input="ci-cd-tools/Jenkinsfile" name="Jenkinsfile.sh" stamp="1694010754451" updateReferences="true"/>&#x0A;<refactoring comment="Rename resource &apos;ci-cd-class-1/ci-cd-tools/Jenkinsfile.sh&apos; to &apos;Jenkinsfile&apos;" description="Rename resource &apos;Jenkinsfile.sh&apos;" flags="7" id="org.eclipse.ltk.core.refactoring.rename.resource" input="ci-cd-tools/Jenkinsfile.sh" name="Jenkinsfile" stamp="1694010871927" updateReferences="true"/>
+</session>

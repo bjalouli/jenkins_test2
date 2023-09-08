@@ -1,0 +1,64 @@
+/*
+ ******************************************************************************
+ * @file         main.c
+ * @brief        This file provides Main program body
+ * @Author       mhanzout
+ * @date         28 mars 2023
+ ******************************************************************************
+ ******************************************************************************
+ EMBEDDED LOW LEVEL SOFWARE ACTIA 2023  All Rights Reserved.
+ ******************************************************************************
+ ******************************************************************************
+ */
+
+/* Includes ------------------------------------------------------------------*/
+
+#include "mcu_project.h"
+#include "periph_init.h"
+#include "global_err.h"
+#include "common_task_launcher.h"
+/* Private variables ---------------------------------------------------------*/
+#define AUTO_TEST    0
+void vMain_Task();
+TstTaskLauncher_globalHandlerTypeDef stTaskLauncher_hglobal;
+/**
+ * @brief  The application entry point.
+ * @retval int
+ */
+int main(void)
+{
+
+  uint8_t ret = 0;
+
+  /* Low Level Init  */
+  ret = u8Main_Init_Periph();
+
+  if (ret != 0)
+  {
+    vGlobalErr_ErrorHandler(DGLOBALERRORS_PERIPH_INIT_FAIL_);
+  }
+
+#if AUTO_TEST
+  /*Run Hw AutoTest */
+  ret = u8AutoTest_hw();
+
+  if (ret != 0)
+  {
+    vGlobalErr_ErrorHandler(DGLOBALERRORS_AUTOTEST_FAIL);
+  }
+#endif
+
+#ifndef NO_RTOS
+  /*Init Task & Run Application ---*/
+  vTaskLauncher_StartApk();
+#endif
+
+  while (1)
+  {
+#ifdef NO_RTOS
+    vMain_Task();
+#endif
+  }
+
+}
+

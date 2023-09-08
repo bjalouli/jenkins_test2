@@ -1,0 +1,20 @@
+#!/bin/bash
+
+TOOL_DIR="${WORKSPACE}/ci-cd-tools"
+
+# Build stage
+echo "Building..."
+${TOOL_DIR}/build.sh "${WORKSPACE}/Debug" "Debug" "all"
+
+# Flash-Debug stage
+echo "Flashing for Debug..."
+${TOOL_DIR}/flash.sh "$DUT_STLINK_sn" "${WORKSPACE}/Debug/ci-cd-class-1.bin"
+
+# Post-build actions
+if [ $? -eq 0 ]; then
+    echo "Build successful. Running deliver script..."
+    ${TOOL_DIR}/deliver.sh "${WORKSPACE}" "${BUILD_TAG}" "${GIT_COMMIT}"
+else
+    echo "Build unsuccessful. Sending email notification..."
+    echo "Unsuccessful build $BUILD_ID" | mail -s "Unsuccessful build $BUILD_ID" $DEFAULT_RECIPIENTS
+fi
